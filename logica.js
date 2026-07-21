@@ -1,31 +1,30 @@
-let formulario = document.querySelector(".formReserva");
-let botonReserva = document.querySelector("#btnSolicitarReserva");
+const formulario = document.querySelector(".formReserva");
 
-let nombreReserva = document.querySelector("#nombreReserva");
-let telefonoReserva = document.querySelector("#telefonoReserva");
-let fechaReserva = document.querySelector("#fechaReserva");
-let horaReserva = document.querySelector("#horaReserva");
-let personasReserva = document.querySelector("#personasReserva");
-let mensajeReserva = document.querySelector("#mensajeReserva");
+const nombreReserva = document.querySelector("#nombreReserva");
+const telefonoReserva = document.querySelector("#telefonoReserva");
+const fechaReserva = document.querySelector("#fechaReserva");
+const horaReserva = document.querySelector("#horaReserva");
+const personasReserva = document.querySelector("#personasReserva");
+const mensajeReserva = document.querySelector("#mensajeReserva");
 
-let btnMenu = document.querySelector("#btnMenu");
-let navLinks = document.querySelector(".navLinks");
+const btnMenu = document.querySelector("#btnMenu");
+const navLinks = document.querySelector(".navLinks");
 
-let btnWhatsapp = document.querySelector("#btnWhatsapp");
-let botonesRedes = document.querySelectorAll(".redSocial");
-let btnVerUbicacion = document.querySelector("#btnVerUbicacion");
+const btnWhatsapp = document.querySelector("#btnWhatsapp");
+const botonesRedes = document.querySelectorAll(".redSocial");
+const btnVerUbicacion = document.querySelector("#btnVerUbicacion");
 
-let modalDemo = document.querySelector("#modalDemo");
-let cerrarModalDemo = document.querySelector("#cerrarModalDemo");
-let aceptarModalDemo = document.querySelector("#aceptarModalDemo");
-let tituloModalDemo = document.querySelector("#tituloModalDemo");
-let textoModalDemo = document.querySelector("#textoModalDemo");
+const modalDemo = document.querySelector("#modalDemo");
+const cerrarModalDemo = document.querySelector("#cerrarModalDemo");
+const aceptarModalDemo = document.querySelector("#aceptarModalDemo");
+const tituloModalDemo = document.querySelector("#tituloModalDemo");
+const textoModalDemo = document.querySelector("#textoModalDemo");
 
-let links = document.querySelectorAll(
+const links = document.querySelectorAll(
     ".navLinks a, .btnNav, .btnPrincipal, .btnSecundario"
 );
 
-botonReserva.addEventListener("click", solicitarReserva);
+formulario.addEventListener("submit", solicitarReserva);
 
 btnMenu.addEventListener("click", function(){
 
@@ -51,15 +50,15 @@ btnVerUbicacion.addEventListener("click", function(){
 
 });
 
-for(let boton of botonesRedes){
+for(const boton of botonesRedes){
 
     boton.addEventListener("click", function(){
 
-        let red = boton.dataset.red;
+        const red = boton.dataset.red;
 
         abrirModalDemo(
-            red + " del restaurante",
-            "En una web real, este botón abriría el perfil oficial de " + red + "."
+            `${red} del restaurante`,
+            `En una web real, este botón abriría el perfil oficial de ${red}.`
         );
 
     });
@@ -71,23 +70,32 @@ aceptarModalDemo.addEventListener("click", cerrarModal);
 
 modalDemo.addEventListener("click", function(e){
 
-    if(e.target == modalDemo){
+    if(e.target === modalDemo){
         cerrarModal();
     }
 
 });
 
-for(let link of links){
+document.addEventListener("keydown", function(e){
+
+    if(e.key === "Escape"){
+        cerrarModal();
+        navLinks.classList.remove("activo");
+    }
+
+});
+
+for(const link of links){
 
     link.addEventListener("click", function(e){
 
-        let destino = this.getAttribute("href");
+        const destino = this.getAttribute("href");
 
         if(destino && destino.startsWith("#")){
 
             e.preventDefault();
 
-            let seccion = document.querySelector(destino);
+            const seccion = document.querySelector(destino);
 
             if(seccion){
 
@@ -105,14 +113,16 @@ for(let link of links){
 
 }
 
-function solicitarReserva(){
+function solicitarReserva(e){
+
+    e.preventDefault();
 
     if(
-        nombreReserva.value.trim() == "" ||
-        telefonoReserva.value.trim() == "" ||
-        fechaReserva.value == "" ||
-        horaReserva.value == "" ||
-        personasReserva.value == ""
+        nombreReserva.value.trim() === "" ||
+        telefonoReserva.value.trim() === "" ||
+        fechaReserva.value === "" ||
+        horaReserva.value === "" ||
+        personasReserva.value === ""
     ){
 
         mostrarMensajeReserva(
@@ -123,6 +133,9 @@ function solicitarReserva(){
         return;
     }
 
+    const nombre = nombreReserva.value.trim();
+    const personas = personasReserva.value;
+
     mostrarMensajeReserva(
         "Solicitud preparada. En una web real se enviaría al restaurante.",
         "exitoReserva"
@@ -130,18 +143,14 @@ function solicitarReserva(){
 
     abrirModalDemo(
         "Solicitud de reserva",
-        "La reserva de " +
-        nombreReserva.value.trim() +
-        " para " +
-        personasReserva.value +
-        " quedó preparada como demostración."
+        `La reserva de ${nombre} para ${personas} quedó preparada como demostración.`
     );
 
     formulario.reset();
 
 }
 
-function mostrarMensajeReserva(texto,tipo){
+function mostrarMensajeReserva(texto, tipo){
 
     mensajeReserva.textContent = texto;
     mensajeReserva.className = "mensajeReserva";
@@ -152,11 +161,11 @@ function mostrarMensajeReserva(texto,tipo){
         mensajeReserva.textContent = "";
         mensajeReserva.className = "mensajeReserva";
 
-    },3000);
+    }, 3000);
 
 }
 
-function abrirModalDemo(titulo,texto){
+function abrirModalDemo(titulo, texto){
 
     tituloModalDemo.textContent = titulo;
     textoModalDemo.textContent = texto;
